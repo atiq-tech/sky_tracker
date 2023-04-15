@@ -78,6 +78,7 @@ class _EntryScreenState extends State<EntryScreen> {
 
   @override
   void initState() {
+    // _getImage();
     ApiAllGetArea apiAllGetArea;
     Provider.of<CounterProvider>(context, listen: false).getArea(context);
     // TODO: implement initState
@@ -1214,7 +1215,8 @@ class _EntryScreenState extends State<EntryScreen> {
       "gaming": "$fourthQuestionAns",
       "event": "${_fiveQuestionController.text}",
       "service": "$sixthQuestionAns",
-      "future": "${_seventhQuestionController.text}"
+      "future": "${_seventhQuestionController.text}",
+      "image": "bigbuyhome11.PNG",
     });
     try {
       Response response = await Dio().post(link, data: formData);

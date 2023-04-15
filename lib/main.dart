@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sky_tracker/login_page.dart';
 import 'package:sky_tracker/providers/counter_probider.dart';
 import 'package:sky_tracker/views/deshboard_screen.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
@@ -21,7 +23,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.teal,
         ),
-        home: const DeshBoardScreen(),
+        home: const LogInPage(),
       ),
     );
   }
