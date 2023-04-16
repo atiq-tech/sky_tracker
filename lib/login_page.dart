@@ -18,38 +18,23 @@ class LogInPage extends StatefulWidget {
 class _LogInPageState extends State<LogInPage> {
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
-
-  ///String link = "http://apps.bigerp24.com/api/login";
-  Fetchlogin(String, dynamic) async {
+  Fetchlogin() async {
+    String link = "http://apps.bigerp24.com/api/login";
     try {
       final formData = FormData.fromMap({
         "username": "${_usernameController.text}",
         "password": "${_passwordController.text}"
       });
-      final response = await Dio()
-          .post("http://apps.bigerp24.com/api/login", data: formData);
-      var item = jsonDecode(response.data);
-      print("aaaaaaaaaaaaaaaaaa========>$item");
-      if (item["success"] == true) {
+      final response = await Dio().post(link, data: formData);
+      print("All api dataaaaaaaa=====>>>$response");
+
+      if (response.statusCode == 200) {
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) => DeshBoardScreen()));
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             duration: Duration(seconds: 1),
             content: Text("Login successfull")));
       }
-      GetStorage().write("token", "${item["token"]}");
-      // GetStorage().write("id", "${item["user"]["id"] as String}");
-      // GetStorage().write("name", "${item["user"]["name"]}");
-      // GetStorage().write("type", "${item["user"]["type"]}");
-      // GetStorage().write("username", "${item["user"]["username"]}");
-      // GetStorage().write("email", "${item["user"]["email"]}");
-      print("token : ${GetStorage().read("token")}");
-      // print("id : ${GetStorage().read("id") as String}");
-      // print("name : ${GetStorage().read("name")}");
-      // print("type : ${GetStorage().read("type")}");
-      // print("username : ${GetStorage().read("username")}");
-      // print("email : ${GetStorage().read("email")}");
-      print(item["success"]);
     } catch (e) {
       print("Something is wrong>>>>>>${e}");
     }
@@ -170,7 +155,7 @@ class _LogInPageState extends State<LogInPage> {
                             InkWell(
                               onTap: () {
                                 if (_formkey.currentState!.validate()) {
-                                  Fetchlogin(String, dynamic);
+                                  Fetchlogin();
                                   _usernameController.text = "";
                                   _passwordController.text = "";
                                 } else {
