@@ -13,12 +13,15 @@ class PurpleButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.teal,
+          backgroundColor: Color.fromARGB(255, 6, 175, 158),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(11),
           ),
         ),
-        child: Text(buttonName.toString()),
+        child: Text(
+          buttonName.toString(),
+          style: TextStyle(fontSize: 20, color: Color.fromARGB(255, 57, 2, 88)),
+        ),
       ),
     );
   }

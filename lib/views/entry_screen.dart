@@ -9,7 +9,6 @@ import 'package:sky_tracker/Api_integration/api_get_area.dart';
 import 'package:sky_tracker/otp_screen.dart';
 import 'package:sky_tracker/providers/counter_probider.dart';
 import 'package:sky_tracker/widget/button.dart';
-
 import '../widget/gap_height.dart';
 
 class EntryScreen extends StatefulWidget {
@@ -26,18 +25,6 @@ final TextEditingController _fiveQuestionController = TextEditingController();
 final TextEditingController _seventhQuestionController =
     TextEditingController();
 
-enum NewSimValue { yes, no }
-
-enum BlAppValue { yes, no }
-
-enum ToffeeAppValue { yes, no }
-
-enum DataCellValue { yes, no }
-
-enum RechargeValue { yes, no }
-
-enum GiftValue { yes, no }
-
 String? _newSim;
 String? _bLApp;
 String? _toffeeApp;
@@ -49,8 +36,7 @@ bool _rechargeFieldVisible = false;
 bool _giftFieldVisible = false;
 bool _textFieldVisible = false;
 
-String? _selectedArea;
-List<String> _items = ["Dhaka", "Pabna", "Kustia"];
+int? _selectedArea;
 
 enum QuestionAns {
   Veryhappy,
@@ -78,7 +64,6 @@ class _EntryScreenState extends State<EntryScreen> {
 
   @override
   void initState() {
-    // _getImage();
     ApiAllGetArea apiAllGetArea;
     Provider.of<CounterProvider>(context, listen: false).getArea(context);
     // TODO: implement initState
@@ -562,7 +547,7 @@ class _EntryScreenState extends State<EntryScreen> {
                             value: _selectedArea,
                             onChanged: (newValue) {
                               setState(() {
-                                _selectedArea = newValue!.toString();
+                                _selectedArea = newValue!.toInt();
                                 // print("Area name is======$_selectedArea");
                               });
                             },
@@ -1139,44 +1124,48 @@ class _EntryScreenState extends State<EntryScreen> {
                   ],
                 ),
                 gapHeight(height: 20.0),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Card(
-                        shape: RoundedRectangleBorder(
-                          side: BorderSide(
-                              color: Color.fromARGB(255, 46, 46, 46), width: 2),
-                        ),
-                        elevation: 10.0,
-                        child: images == null
-                            ? Image.network(
-                                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSe5grOHHHCKNR15MLoms5LIbhrgdB2rq6IOw&usqp=CAU",
-                                height: 200,
-                                width: 220,
-                                fit: BoxFit.cover,
-                              )
-                            : Image.file(
-                                File(images!),
-                                height: 200,
-                                width: 200,
-                                fit: BoxFit.cover,
-                              )),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    ElevatedButton(
-                        onPressed: () {
-                          _imageSource = ImageSource.camera;
-                          _getImage();
-                        },
-                        child: Text(
-                          "Select camera",
-                          style: TextStyle(
-                              color: Color.fromARGB(255, 249, 254, 255),
-                              fontWeight: FontWeight.w600,
-                              fontSize: 20),
-                        )),
-                  ],
+                Align(
+                  alignment: Alignment.center,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Card(
+                          shape: RoundedRectangleBorder(
+                            side: BorderSide(
+                                color: Color.fromARGB(255, 46, 46, 46),
+                                width: 2),
+                          ),
+                          elevation: 10.0,
+                          child: images == null
+                              ? Image.network(
+                                  "https://mir-s3-cdn-cf.behance.net/projects/404/3a71ad160389291.Y3JvcCwxMzQyLDEwNTAsMjI5LDA.jpg",
+                                  height: 200,
+                                  width: 200,
+                                  fit: BoxFit.cover,
+                                )
+                              : Image.file(
+                                  File(images!.path),
+                                  height: 200,
+                                  width: 200,
+                                  fit: BoxFit.cover,
+                                )),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      ElevatedButton(
+                          onPressed: () {
+                            _imageSource = ImageSource.camera;
+                            _getImage();
+                          },
+                          child: Text(
+                            "Select camera",
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 249, 254, 255),
+                                fontWeight: FontWeight.w600,
+                                fontSize: 20),
+                          )),
+                    ],
+                  ),
                 ),
                 gapHeight(height: 20.0),
                 PurpleButton(
@@ -1191,6 +1180,30 @@ class _EntryScreenState extends State<EntryScreen> {
         ),
       ),
     );
+  }
+
+  emtyMethod() {
+    setState(() {
+      _nameController.text = "";
+      _phoneController.text = "";
+      _newSim = "";
+      _bLApp = "";
+      _toffeeApp = "";
+      _dataCell = "";
+      _DataSellController.text = "";
+      _recharge = "";
+      _rechargeController.text = "";
+      _gift = "";
+      _GiftController.text = "";
+      _selectedArea != "";
+      firstQuestionAns = "";
+      SecondQuestionAns = "";
+      thirdQuestionAns = "";
+      fourthQuestionAns = "";
+      _fiveQuestionController.text = "";
+      sixthQuestionAns = "";
+      _seventhQuestionController.text = "";
+    });
   }
 
   fetchOtpGet() async {
@@ -1216,31 +1229,33 @@ class _EntryScreenState extends State<EntryScreen> {
       "event": "${_fiveQuestionController.text}",
       "service": "$sixthQuestionAns",
       "future": "${_seventhQuestionController.text}",
-      "image": "bigbuyhome11.PNG",
+      "image": await MultipartFile.fromFile(images!.path, filename: "fileName"),
     });
     try {
       Response response = await Dio().post(link, data: formData);
       print(response.data);
-
-      print("message============> ${response.data["message"]}");
-      print(" mobile =================> ${response.data["mobile"]}");
-      print("otpCode================>  ${response.data["otpCode"]}");
-      getmessage = "${response.data["message"]}";
-      getmobilenumber = "${response.data["mobile"]}";
-      getotp = "${response.data["otpCode"]}";
-      if ("${response.data["mobile"]}" == "null") {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("Your mobile number")));
-      } else {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => OTPScreen(
-              phoneNumber: getmobilenumber,
-              api_otp: getotp,
+      if (response.statusCode == 201) {
+        print("message============> ${response.data["message"]}");
+        print(" mobile =================> ${response.data["mobile"]}");
+        print("otpCode================>  ${response.data["otpCode"]}");
+        emtyMethod();
+        getmessage = "${response.data["message"]}";
+        getmobilenumber = "${response.data["mobile"]}";
+        getotp = "${response.data["otpCode"]}";
+        if ("${response.data["mobile"]}" == "null") {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text("Your mobile number")));
+        } else {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => OTPScreen(
+                phoneNumber: getmobilenumber,
+                api_otp: getotp,
+              ),
             ),
-          ),
-        );
+          );
+        }
       }
     } catch (e) {
       print(e);
@@ -1251,15 +1266,12 @@ class _EntryScreenState extends State<EntryScreen> {
   String? getmobilenumber;
   String? getotp;
 
-  String? images;
+  XFile? images;
   ImageSource _imageSource = ImageSource.camera;
 
   void _getImage() async {
-    final selectedImage = await ImagePicker().pickImage(source: _imageSource);
-    if (selectedImage != null) {
-      setState(() {
-        images = selectedImage.path;
-      });
-    }
+    ImagePicker _picker = ImagePicker();
+    images = await _picker.pickImage(source: ImageSource.camera);
+    setState(() {});
   }
 }

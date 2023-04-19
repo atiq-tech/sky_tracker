@@ -50,7 +50,7 @@ class _LogInPageState extends State<LogInPage> {
             FocusManager.instance.primaryFocus?.unfocus();
           },
           child: Container(
-            color: Color.fromARGB(255, 2, 135, 145),
+            color: Color.fromARGB(255, 6, 126, 196),
             height: double.infinity,
             width: double.infinity,
             child: SingleChildScrollView(
@@ -92,7 +92,7 @@ class _LogInPageState extends State<LogInPage> {
                         padding:
                             EdgeInsets.only(left: 20.0, right: 20.0, top: 45.0),
                         decoration: BoxDecoration(
-                            color: Color.fromARGB(255, 191, 212, 214),
+                            color: Color.fromARGB(255, 255, 255, 255),
                             borderRadius: BorderRadius.circular(15.0),
                             border: Border.all(
                                 color: Color.fromARGB(255, 11, 7, 248),

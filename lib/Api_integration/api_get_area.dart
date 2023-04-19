@@ -19,10 +19,10 @@ class ApiAllGetArea {
       for (var i in data!["areas"]) {
         allareas = Areas.fromJson(i);
         allGetAreaslist.add(allareas);
-        print(allGetAreaslist);
       }
       print("Get Area length====>: ${allGetAreaslist.length}");
-      //print("Area Name=========>${allGetArealist[0]}");
+      print("Area Name=========>${allGetAreaslist[0].name}");
+      print("Area id=========>${allGetAreaslist[0].id}");
     } catch (e) {
       print("Something is wrong all Get Area=======:$e");
     }
