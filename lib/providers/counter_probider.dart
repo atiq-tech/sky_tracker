@@ -13,10 +13,16 @@ class CounterProvider extends ChangeNotifier {
   }
 
   //get data
-  List<AllGetDataModelClass> allGetDatalist = [];
+  List<DataLists> allGetDatalist = [];
   getGetData(context, String? dateFrom, String? dateTo) async {
     allGetDatalist =
         await ApiAllGetData.GetApiAllGetData(context, dateFrom, dateTo);
     notifyListeners();
   }
+  // List<AllGetDataModelClass> allGetDatalist = [];
+  // getGetData(context, String? dateFrom, String? dateTo) async {
+  //   allGetDatalist =
+  //       await ApiAllGetData.GetApiAllGetData(context, dateFrom, dateTo);
+  //   notifyListeners();
+  // }
 }

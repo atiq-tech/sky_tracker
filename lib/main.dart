@@ -13,7 +13,6 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-//sjhdbbvubh c//
   @override
   Widget build(BuildContext context) {
     return MultiProvider(

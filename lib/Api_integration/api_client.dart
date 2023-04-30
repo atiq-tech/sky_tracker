@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:sky_tracker/views/deshboard_screen.dart';
 
 final Dio dio = Dio();
@@ -24,6 +25,9 @@ class ApiClient {
       });
       Response response = await dio.post(loginApi, data: formData);
       print("All api login response=====>>>$response");
+      GetStorage().write("token", response.data["token"]);
+      print(
+          " tokennnnnnnnnnnnnnnnnnnnnn : ======>  ${GetStorage().read("token")}");
       if (response.statusCode == 200) {
         Navigator.pushReplacement(
           context,

@@ -464,63 +464,62 @@ class _DataListScreenState extends State<DataListScreen> {
                                   ),
                                   DataCell(
                                     Center(
-                                        child: Text(
-                                            '${allGetData[index].dataLists![0].name}')),
+                                        child:
+                                            Text('${allGetData[index].name}')),
                                   ),
                                   DataCell(
                                     Center(
                                         child: Text(
-                                            '${allGetData[index].dataLists![0].mobile}')),
+                                            '${allGetData[index].mobile}')),
                                   ),
                                   DataCell(
                                     Center(
                                         child: Text(
-                                            '${allGetData[index].dataLists![0].newSim}')),
+                                            '${allGetData[index].newSim}')),
                                   ),
                                   DataCell(
                                     Center(
                                         child: Text(
-                                            "${allGetData[index].dataLists![0].toffee}")),
+                                            "${allGetData[index].toffee}")),
                                   ),
                                   DataCell(
                                     Center(
                                         child: Text(
-                                            "${allGetData[index].dataLists![0].sellPackage}")),
+                                            "${allGetData[index].sellPackage}")),
                                   ),
                                   DataCell(
                                     Center(
                                         child: Text(
-                                            "${allGetData[index].dataLists![0].sellGb}")),
+                                            "${allGetData[index].sellGb}")),
                                   ),
                                   DataCell(
                                     Center(
                                         child: Text(
-                                            "${allGetData[index].dataLists![0].rechargePackage}")),
+                                            "${allGetData[index].rechargePackage}")),
                                   ),
                                   DataCell(
                                     Center(
                                         child: Text(
-                                            "${allGetData[index].dataLists![0].rechargeAmount}")),
+                                            "${allGetData[index].rechargeAmount}")),
+                                  ),
+                                  DataCell(
+                                    Center(
+                                        child:
+                                            Text("${allGetData[index].gift}")),
                                   ),
                                   DataCell(
                                     Center(
                                         child: Text(
-                                            "${allGetData[index].dataLists![0].gift}")),
+                                            "${allGetData[index].giftName}")),
+                                  ),
+                                  DataCell(
+                                    Center(
+                                        child: Text("${allGetData[1].area}")),
                                   ),
                                   DataCell(
                                     Center(
                                         child: Text(
-                                            "${allGetData[index].dataLists![0].giftName}")),
-                                  ),
-                                  DataCell(
-                                    Center(
-                                        child: Text(
-                                            "${allGetData[index].dataLists![0].area}")),
-                                  ),
-                                  DataCell(
-                                    Center(
-                                        child: Text(
-                                            "${allGetData[index].dataLists![0].location}")),
+                                            "${allGetData[index].location}")),
                                   ),
                                 ],
                               ),
