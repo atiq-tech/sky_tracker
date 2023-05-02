@@ -533,11 +533,14 @@ class _DataListScreenState extends State<DataListScreen> {
                                   DataCell(
                                     Center(
                                         child: Container(
-                                            width: 40.0,
-                                            height: 40.0,
-                                            color: Colors.black,
-                                            child: Image.network(
-                                                "http://apps.bigerp24.com/${allGetData[index].image}"))),
+                                      width: 40.0,
+                                      height: 40.0,
+                                      color: Colors.black,
+                                      child: Image.network(
+                                        "http://apps.bigerp24.com/${allGetData[index].image}",
+                                        fit: BoxFit.cover,
+                                      ),
+                                    )),
                                   ),
                                 ],
                               ),
