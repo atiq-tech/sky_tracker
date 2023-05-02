@@ -3,7 +3,6 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sky_tracker/Api_integration/api_get_data.dart';
 import 'package:sky_tracker/providers/counter_probider.dart';
-
 import '../widget/button.dart';
 
 class DataListScreen extends StatefulWidget {
@@ -13,11 +12,11 @@ class DataListScreen extends StatefulWidget {
 
 class _DataListScreenState extends State<DataListScreen> {
   List<String> items = ["All", "By Area", "Team Leader", "By BP"];
-  List<String> areaList = ["Dhaka", "Pabna", "Kustia"];
+  var areaList;
   List<String> teamLeaderList = ["Jone", "Mickey", "Root"];
   List<String> bpList = ["BP1", "BP2", "BP3"];
   String dropDownvalue = "All";
-  String? dropDownAreaList;
+  int? _selectedArea;
   String? dropDownTeamLeader;
   String? dropDownBP;
   String? fromPickedDate;
@@ -67,6 +66,8 @@ class _DataListScreenState extends State<DataListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final allGetAreaData =
+        Provider.of<CounterProvider>(context).allGetAreaslist;
     //All Get data
     final allGetData = Provider.of<CounterProvider>(context).allGetDatalist;
     print("All GET Data Lenght is:::::${allGetData.length}");
@@ -114,9 +115,13 @@ class _DataListScreenState extends State<DataListScreen> {
                               );
                             }).toList(),
                             onChanged: (String? value) {
+                              areaList = Provider.of<CounterProvider>(context,
+                                      listen: false)
+                                  .getArea(context);
                               setState(() {
                                 dropDownvalue = value!.toString();
                                 // _byAreaVisible = value == "By Area";
+                                print("qqqqqqqqqqqqq$dropDownvalue");
                               });
                             },
                           ),
@@ -151,24 +156,31 @@ class _DataListScreenState extends State<DataListScreen> {
                                 padding: const EdgeInsets.only(
                                     left: 10.0, right: 10.0),
                                 child: DropdownButton(
-                                  underline: const SizedBox.shrink(),
                                   isExpanded: true,
                                   hint: const Text(
-                                    "Select Area",
-                                    style: TextStyle(color: Colors.black45),
+                                    'Select area',
+                                    style: TextStyle(fontSize: 14),
                                   ),
-                                  value: dropDownAreaList,
-                                  items: areaList.map((String mapValue) {
-                                    return DropdownMenuItem<String>(
-                                      value: mapValue,
-                                      child: Text(mapValue),
-                                    );
-                                  }).toList(),
-                                  onChanged: (String? newValue) {
+                                  dropdownColor: const Color.fromARGB(255, 231,
+                                      251, 255), // Not necessary for Option 1
+                                  value: _selectedArea,
+                                  onChanged: (newValue) {
                                     setState(() {
-                                      dropDownAreaList = newValue;
+                                      _selectedArea = newValue!.toInt();
+                                      print("Area name is======$_selectedArea");
                                     });
                                   },
+                                  items: allGetAreaData.map((location) {
+                                    return DropdownMenuItem(
+                                      value: location.id,
+                                      child: Text(
+                                        "${location.name}",
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    );
+                                  }).toList(),
                                 ),
                               ),
                             ),
@@ -395,11 +407,8 @@ class _DataListScreenState extends State<DataListScreen> {
                 PurpleButton("Search", () {
                   setState(() {
                     Provider.of<CounterProvider>(context, listen: false)
-                        .getGetData(
-                      context,
-                      "${firstPickedDate}",
-                      "${secondPickedDate}",
-                    );
+                        .getGetData(context, "${firstPickedDate}",
+                            "${secondPickedDate}", _selectedArea!);
                     print("firstDate product ledger=====::${firstPickedDate}");
                     print(
                         "secondDate ++++++product ledger=====::${secondPickedDate}");
@@ -454,6 +463,7 @@ class _DataListScreenState extends State<DataListScreen> {
                               DataColumn(label: Center(child: Text("Area"))),
                               DataColumn(
                                   label: Center(child: Text("Location"))),
+                              DataColumn(label: Center(child: Text("Image"))),
                             ],
                             rows: List.generate(
                               allGetData.length,
@@ -514,12 +524,22 @@ class _DataListScreenState extends State<DataListScreen> {
                                   ),
                                   DataCell(
                                     Center(
-                                        child: Text("${allGetData[1].area}")),
+                                        child: Text(
+                                            "${allGetData[index].area!.name}")),
                                   ),
                                   DataCell(
                                     Center(
                                         child: Text(
                                             "${allGetData[index].location}")),
+                                  ),
+                                  DataCell(
+                                    Center(
+                                        child: Container(
+                                            width: 40.0,
+                                            height: 40.0,
+                                            color: Colors.black,
+                                            child: Image.network(
+                                                "http://apps.bigerp24.com/${allGetData[index].image}"))),
                                   ),
                                 ],
                               ),

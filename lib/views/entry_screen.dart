@@ -1248,7 +1248,7 @@ class _DataEntryScreenState extends State<DataEntryScreen> {
       "gift": "$_gift",
       "gift_name": "${_GiftController.text}",
       "area_id": "$_selectedArea",
-      "location": "$currentAddress",
+      "location": currentAddress,
       "program": "$firstQuestionAns",
       "experience": "$SecondQuestionAns",
       "app_experience": "$thirdQuestionAns",

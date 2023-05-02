@@ -5,14 +5,19 @@ import 'package:get_storage/get_storage.dart';
 import 'package:sky_tracker/Api_modelClass/all_get_data_modelClass.dart';
 
 class ApiAllGetData {
-  static GetApiAllGetData(context, String? dateFrom, String? dateTo) async {
+  static GetApiAllGetData(
+      context, String? dateFrom, String? dateTo, int areaId) async {
     String Link = "http://apps.bigerp24.com/api/get_data";
     List<DataLists> allGetDatalist = [];
     DataLists allDataListsClass;
     print(GetStorage().read("token"));
     try {
       Response response = await Dio().post(Link,
-          data: {"dateFrom": "$dateFrom", "dateTo": "$dateTo"},
+          data: {
+            "dateFrom": "$dateFrom",
+            "dateTo": "$dateTo",
+            "areaId": "$areaId"
+          },
           options: Options(headers: {
             "Content-Type": "application/json",
             "Authorization": "Bearer ${GetStorage().read("token")}",
