@@ -5,14 +5,14 @@ import 'package:sky_tracker/Api_modelClass/all_get_area_model_class.dart';
 import 'package:sky_tracker/Api_modelClass/all_get_data_modelClass.dart';
 
 class CounterProvider extends ChangeNotifier {
-  //get Area
+  //get Area api
   List<Areas> allGetAreaslist = [];
   getArea(BuildContext context) async {
     allGetAreaslist = await ApiAllGetArea.GetApiAllGetArea(context);
     notifyListeners();
   }
 
-  //get data
+  //get data api
   List<DataLists> allGetDatalist = [];
   getGetData(context, String? dateFrom, String? dateTo, int areaId) async {
     allGetDatalist =

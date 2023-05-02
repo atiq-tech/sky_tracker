@@ -75,7 +75,6 @@ class _DataListScreenState extends State<DataListScreen> {
       appBar: AppBar(
         title: const Text("Data List"),
         centerTitle: true,
-        // automaticallyImplyLeading: false,
         backgroundColor: Color.fromARGB(255, 6, 126, 196),
       ),
       body: SingleChildScrollView(
@@ -84,7 +83,6 @@ class _DataListScreenState extends State<DataListScreen> {
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
-                // This Row is Search type
                 Row(
                   children: [
                     const Expanded(
