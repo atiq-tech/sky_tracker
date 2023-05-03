@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:sky_tracker/Api_integration/api_get_bp.dart';
 import 'package:sky_tracker/Api_integration/api_get_data.dart';
+import 'package:sky_tracker/Api_integration/api_get_team_leader.dart';
 import 'package:sky_tracker/providers/counter_probider.dart';
+import 'package:sky_tracker/token_provider.dart';
 import '../widget/button.dart';
 
 class DataListScreen extends StatefulWidget {
@@ -12,13 +15,17 @@ class DataListScreen extends StatefulWidget {
 
 class _DataListScreenState extends State<DataListScreen> {
   List<String> items = ["All", "By Area", "Team Leader", "By BP"];
-  var areaList;
-  List<String> teamLeaderList = ["Jone", "Mickey", "Root"];
-  List<String> bpList = ["BP1", "BP2", "BP3"];
   String dropDownvalue = "All";
+  //
+  var areaList;
   int? _selectedArea;
-  String? dropDownTeamLeader;
-  String? dropDownBP;
+  //
+  var teamLeaderList;
+  int? _dropDownTeamLeader;
+  //
+  var bpList;
+  int? _dropDownBP;
+  //
   String? fromPickedDate;
   String? dateToPickedDate;
   int? setIndex;
@@ -56,8 +63,11 @@ class _DataListScreenState extends State<DataListScreen> {
   }
 
   ApiAllGetData? apiAllGetData;
+  ApiTeamLeader? apiTeamLeader;
+  ApiGetByBp? apiGetByBp;
   @override
   void initState() {
+    Provider.of<TokenProvider>(context, listen: false).getSignUpToken();
     firstPickedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
     secondPickedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
     // TODO: implement initState
@@ -66,8 +76,18 @@ class _DataListScreenState extends State<DataListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var token = Provider.of<TokenProvider>(context, listen: true).token;
+    // get area
     final allGetAreaData =
         Provider.of<CounterProvider>(context).allGetAreaslist;
+    print("GetArea Lenght is:::::${allGetAreaData.length}");
+    // get TeamLeader
+    final allGetTeamLeaderData =
+        Provider.of<CounterProvider>(context).allGetTeamLeaderlist;
+    print("TeamLeader Lenght is:::::${allGetTeamLeaderData.length}");
+    // get by bp
+    final allByBpData = Provider.of<CounterProvider>(context).allGetByBplist;
+    print("ByyBpp Lenght is:::::${allByBpData.length}");
     //All Get data
     final allGetData = Provider.of<CounterProvider>(context).allGetDatalist;
     print("All GET Data Lenght is:::::${allGetData.length}");
@@ -75,6 +95,7 @@ class _DataListScreenState extends State<DataListScreen> {
       appBar: AppBar(
         title: const Text("Data List"),
         centerTitle: true,
+        // automaticallyImplyLeading: false,
         backgroundColor: Color.fromARGB(255, 6, 126, 196),
       ),
       body: SingleChildScrollView(
@@ -83,6 +104,7 @@ class _DataListScreenState extends State<DataListScreen> {
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
+                // This Row is Search type
                 Row(
                   children: [
                     const Expanded(
@@ -115,7 +137,14 @@ class _DataListScreenState extends State<DataListScreen> {
                             onChanged: (String? value) {
                               areaList = Provider.of<CounterProvider>(context,
                                       listen: false)
-                                  .getArea(context);
+                                  .getArea(context, token);
+                              teamLeaderList = Provider.of<CounterProvider>(
+                                      context,
+                                      listen: false)
+                                  .getTeamLeader(context, token, "team_leader");
+                              bpList = Provider.of<CounterProvider>(context,
+                                      listen: false)
+                                  .getByBp(context, token, "bp");
                               setState(() {
                                 dropDownvalue = value!.toString();
                                 // _byAreaVisible = value == "By Area";
@@ -165,7 +194,7 @@ class _DataListScreenState extends State<DataListScreen> {
                                   onChanged: (newValue) {
                                     setState(() {
                                       _selectedArea = newValue!.toInt();
-                                      print("Area name is======$_selectedArea");
+                                      print("Area id is======$_selectedArea");
                                     });
                                   },
                                   items: allGetAreaData.map((location) {
@@ -212,25 +241,33 @@ class _DataListScreenState extends State<DataListScreen> {
                                 padding: const EdgeInsets.only(
                                     left: 10.0, right: 10.0),
                                 child: DropdownButton(
-                                  underline: const SizedBox.shrink(),
                                   isExpanded: true,
                                   hint: const Text(
-                                    "Select Team Leader",
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(color: Colors.black45),
+                                    'Select Team Leader',
+                                    style: TextStyle(fontSize: 14),
                                   ),
-                                  value: dropDownTeamLeader,
-                                  items: teamLeaderList.map((String mapValue) {
-                                    return DropdownMenuItem<String>(
-                                      value: mapValue,
-                                      child: Text(mapValue),
-                                    );
-                                  }).toList(),
-                                  onChanged: (String? newValue) {
+                                  dropdownColor: const Color.fromARGB(255, 231,
+                                      251, 255), // Not necessary for Option 1
+                                  value: _dropDownTeamLeader,
+                                  onChanged: (newValue) {
                                     setState(() {
-                                      dropDownTeamLeader = newValue;
+                                      _dropDownTeamLeader = newValue!.toInt();
+                                      print(
+                                          "Team Leader id is======$_dropDownTeamLeader");
                                     });
                                   },
+
+                                  items: allGetTeamLeaderData.map((location) {
+                                    return DropdownMenuItem(
+                                      value: location.id,
+                                      child: Text(
+                                        "${location.name}",
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    );
+                                  }).toList(),
                                 ),
                               ),
                             ),
@@ -264,25 +301,31 @@ class _DataListScreenState extends State<DataListScreen> {
                                 padding: const EdgeInsets.only(
                                     left: 10.0, right: 10.0),
                                 child: DropdownButton(
-                                  underline: const SizedBox.shrink(),
                                   isExpanded: true,
                                   hint: const Text(
-                                    "Select BP",
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(color: Colors.black45),
+                                    'Select BP',
+                                    style: TextStyle(fontSize: 14),
                                   ),
-                                  value: dropDownBP,
-                                  items: bpList.map((String mapValue) {
-                                    return DropdownMenuItem<String>(
-                                      value: mapValue,
-                                      child: Text(mapValue),
-                                    );
-                                  }).toList(),
-                                  onChanged: (String? newValue) {
+                                  dropdownColor: const Color.fromARGB(255, 231,
+                                      251, 255), // Not necessary for Option 1
+                                  value: _dropDownBP,
+                                  onChanged: (newValue) {
                                     setState(() {
-                                      dropDownBP = newValue;
+                                      _dropDownBP = newValue!.toInt();
+                                      print("ByBp id is======$_dropDownBP");
                                     });
                                   },
+                                  items: allByBpData.map((location) {
+                                    return DropdownMenuItem(
+                                      value: location.id,
+                                      child: Text(
+                                        "${location.name}",
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    );
+                                  }).toList(),
                                 ),
                               ),
                             ),
@@ -302,8 +345,8 @@ class _DataListScreenState extends State<DataListScreen> {
                       flex: 6,
                       child: Text(
                         "From ",
-                        style: TextStyle(
-                            color: Color.fromARGB(255, 126, 125, 125)),
+                        style:
+                            TextStyle(color: Color.fromARGB(255, 37, 36, 36)),
                       ),
                     ),
                     Expanded(
@@ -405,8 +448,14 @@ class _DataListScreenState extends State<DataListScreen> {
                 PurpleButton("Search", () {
                   setState(() {
                     Provider.of<CounterProvider>(context, listen: false)
-                        .getGetData(context, "${firstPickedDate}",
-                            "${secondPickedDate}", _selectedArea!);
+                        .getGetData(
+                      context,
+                      "${firstPickedDate}",
+                      "${secondPickedDate}",
+                      _selectedArea!.toInt(),
+                      _dropDownBP!.toInt(),
+                      _dropDownTeamLeader!.toInt(),
+                    );
                     print("firstDate product ledger=====::${firstPickedDate}");
                     print(
                         "secondDate ++++++product ledger=====::${secondPickedDate}");
@@ -523,7 +572,7 @@ class _DataListScreenState extends State<DataListScreen> {
                                   DataCell(
                                     Center(
                                         child: Text(
-                                            "${allGetData[index].area!.name}")),
+                                            "${allGetData[1].area!.name}")),
                                   ),
                                   DataCell(
                                     Center(
@@ -533,14 +582,11 @@ class _DataListScreenState extends State<DataListScreen> {
                                   DataCell(
                                     Center(
                                         child: Container(
-                                      width: 40.0,
-                                      height: 40.0,
-                                      color: Colors.black,
-                                      child: Image.network(
-                                        "http://apps.bigerp24.com/${allGetData[index].image}",
-                                        fit: BoxFit.cover,
-                                      ),
-                                    )),
+                                            width: 40.0,
+                                            height: 40.0,
+                                            color: Colors.black,
+                                            child: Image.network(
+                                                "http://apps.bigerp24.com/${allGetData[index].image}"))),
                                   ),
                                 ],
                               ),

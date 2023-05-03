@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:sky_tracker/providers/counter_probider.dart';
+import 'package:sky_tracker/token_provider.dart';
 import 'package:sky_tracker/views/auth/login_page.dart';
 
 void main() async {
@@ -18,6 +19,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => CounterProvider()),
+        ChangeNotifierProvider(create: (_) => TokenProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

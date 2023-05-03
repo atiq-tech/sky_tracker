@@ -5,8 +5,8 @@ import 'package:get_storage/get_storage.dart';
 import 'package:sky_tracker/Api_modelClass/all_get_data_modelClass.dart';
 
 class ApiAllGetData {
-  static GetApiAllGetData(
-      context, String? dateFrom, String? dateTo, int areaId) async {
+  static GetApiAllGetData(context, String? dateFrom, String? dateTo, int areaId,
+      int bpId, int leaderId) async {
     String Link = "http://apps.bigerp24.com/api/get_data";
     List<DataLists> allGetDatalist = [];
     DataLists allDataListsClass;
@@ -16,7 +16,9 @@ class ApiAllGetData {
           data: {
             "dateFrom": "$dateFrom",
             "dateTo": "$dateTo",
-            "areaId": "$areaId"
+            "areaId": "$areaId",
+            "bpId": "$bpId",
+            "leaderId": "$leaderId"
           },
           options: Options(headers: {
             "Content-Type": "application/json",

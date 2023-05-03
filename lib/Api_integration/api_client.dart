@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 import 'package:sky_tracker/views/deshboard_screen.dart';
 
 final Dio dio = Dio();
@@ -23,16 +27,29 @@ class ApiClient {
         "username": "${username}",
         "password": "${password}",
       });
-      Response response = await dio.post(loginApi, data: formData);
+      var response = await http.post(
+        Uri.parse(loginApi),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(
+            {"username": username.toString(), "password": password.toString()}),
+      );
+      var data = jsonDecode(response.body);
       print("All api login response=====>>>$response");
-      GetStorage().write("token", response.data["token"]);
+      GetStorage().write("token", data["token"]);
       print(
           " tokennnnnnnnnnnnnnnnnnnnnn : ======>  ${GetStorage().read("token")}");
+      final sharedPreferences = await SharedPreferences.getInstance();
+      sharedPreferences.setString("token", data["token"]);
       if (response.statusCode == 200) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (_) => DeshBoardScreen(currentPosition: currentPosition),
+            builder: (_) => DeshBoardScreen(
+              currentPosition: currentPosition,
+              token: data["token"],
+            ),
           ),
         );
         Fluttertoast.showToast(msg: "Login successfull");
