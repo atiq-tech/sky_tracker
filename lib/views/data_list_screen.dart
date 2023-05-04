@@ -452,9 +452,9 @@ class _DataListScreenState extends State<DataListScreen> {
                       context,
                       "${firstPickedDate}",
                       "${secondPickedDate}",
-                      _selectedArea!.toInt(),
-                      _dropDownBP!.toInt(),
-                      _dropDownTeamLeader!.toInt(),
+                      _selectedArea!,
+                      _dropDownBP!,
+                      _dropDownTeamLeader!,
                     );
                     print("firstDate product ledger=====::${firstPickedDate}");
                     print(
